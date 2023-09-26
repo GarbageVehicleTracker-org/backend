@@ -19,6 +19,9 @@ app.use((err, req, res, next) => {
   res.status(500).send("Internal server error");
 });
 
+app.get("/", (req, res) => {
+  console.log("Hello Linux team!");
+});
 // Define a route for the home page
 app.get("/vehicles", async (req, res, next) => {
   // Add 'next' parameter here
