@@ -21,6 +21,7 @@ app.use((err, req, res, next) => {
 
 app.get("/", (req, res) => {
   console.log("Hello Linux team!");
+  res.send("Welcome");
 });
 // Define a route for the home page
 app.get("/vehicles", async (req, res, next) => {
