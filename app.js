@@ -11,7 +11,10 @@ const mongoUri =
 let currentCoordinates = {};
 
 // MongoDB client
-const client = new mongodb.MongoClient(mongoUri);
+const client = new mongodb.MongoClient(mongoUri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 // Middleware
 app.use(express.json()); // Parse JSON request bodies
@@ -52,7 +55,7 @@ app.get("/", (req, res) => {
 });
 
 // Define a route for the home page
-app.get("/vehicles", async (req, res, next) => {
+app.get("/vehicles", async (req, res) => {
   try {
     await client.connect();
     const db = client.db("vehicles");
@@ -60,13 +63,19 @@ app.get("/vehicles", async (req, res, next) => {
     const data = await collection.find({}).toArray();
     res.send(data);
   } catch (err) {
-    next(err); // Pass the error to the error handling middleware
+    console.error(err);
+    res.status(500).send("Internal server error");
   }
 });
 
 // Start the server
-client.connect().then(() => {
-  app.listen(port, () => {
-    console.log("Listening on port ", port);
+client
+  .connect()
+  .then(() => {
+    app.listen(port, () => {
+      console.log("Listening on port ", port);
+    });
+  })
+  .catch((err) => {
+    console.error(err);
   });
-});
