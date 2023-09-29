@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "backend code for our college project",
   "main": "app.js",
+  "proxy": "https://test-front-buie.onrender.com",
   "scripts": {
     "test": "nodemon app.js"
   },
