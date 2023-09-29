@@ -1,21 +1,23 @@
 const mongoose = require("mongoose");
+const moment = require("moment-timezone");
 
-// Define the user schema
 const positionSchema = new mongoose.Schema({
-  // username: {
-  //   type: String,
-  //   required: true,
-  //   unique: true,
-  // },
   coordinates: [
     {
       latitude: Number,
       longitude: Number,
+      timestamp: {
+        type: Date,
+        default: Date.now,
+      },
     },
   ],
 });
 
-// Create the User model
-const User = mongoose.model("position", positionSchema);
+positionSchema.virtual("coordinates.timestampIST").get(function () {
+  return moment(this.coordinates.timestamp).tz("Asia/Kolkata").format();
+});
 
-module.exports = User;
+const Position = mongoose.model("Position", positionSchema);
+
+module.exports = Position;

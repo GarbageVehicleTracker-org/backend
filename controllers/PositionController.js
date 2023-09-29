@@ -1,35 +1,67 @@
-// controllers/UserController.js
-const User = require("../schema/PositionSchema");
+// controllers/PositionController.js
+const Position = require("../schema/PositionSchema");
+const moment = require("moment-timezone"); // Import moment-timezone
 
 class PositionController {
   async createUser(req, res) {
-    const { latitude, longitude } = req.body;
+    const { latitude, longitude, timestamp } = req.body;
 
     try {
-      const newUser = new User({
-        coordinates: [{ latitude, longitude }],
-      });
+      // Find an existing document or create a new one
+      let position = await Position.findOne();
 
-      const savedUser = await newUser.save();
+      if (!position) {
+        position = new Position({ coordinates: [] });
+      }
 
-      res.status(201).json(savedUser);
+      // Parse the incoming timestamp as a moment object in "Asia/Kolkata" timezone
+      const timestampMoment = moment(timestamp).tz("Asia/Kolkata");
+
+      // Create a new coordinate object with the timestamp
+      const newCoordinate = {
+        latitude,
+        longitude,
+        timestamp: timestampMoment.toDate(), // Convert to JavaScript Date object
+      };
+
+      // Append the new coordinate to the array
+      position.coordinates.push(newCoordinate);
+
+      // Save the document with the updated coordinates
+      const savedPosition = await position.save();
+
+      res.status(201).json(savedPosition);
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Internal server error" });
     }
   }
 
-  async getCoordinates(req, res) {
+async getCoordinates(req, res) {
     try {
-      // Find all user documents and project only the coordinates
-      const coordinates = await User.find({}, "coordinates");
+      // Find the single document and return its coordinates array
+      const position = await Position.findOne();
+      const coordinates = position ? position.coordinates : [];
 
-      res.status(200).json(coordinates);
+      // Convert the timestamps to "Asia/Kolkata" timezone format
+      const coordinatesInIST = coordinates.map((coordinate) => {
+        const timestampMoment = moment(coordinate.timestamp).tz("Asia/Kolkata");
+        const formattedTimestamp = timestampMoment.format("YYYY-MM-DD HH:mm:ss");
+        return {
+          latitude: coordinate.latitude,
+          longitude: coordinate.longitude,
+          timestamp: formattedTimestamp,
+          // timestamp: timestampMoment,
+        };
+      });
+
+      res.status(200).json(coordinatesInIST);
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "Internal server error" });
     }
   }
 }
+
 
 module.exports = new PositionController();
