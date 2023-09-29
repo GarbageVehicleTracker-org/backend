@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 // Define the user schema
 const positionSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+  // username: {
+  //   type: String,
+  //   required: true,
+  //   unique: true,
+  // },
   coordinates: [
     {
       latitude: Number,

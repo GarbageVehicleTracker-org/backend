@@ -3,11 +3,10 @@ const User = require("../schema/PositionSchema");
 
 class PositionController {
   async createUser(req, res) {
-    const { latitude, longitude, username } = req.body;
+    const { latitude, longitude } = req.body;
 
     try {
       const newUser = new User({
-        username,
         coordinates: [{ latitude, longitude }],
       });
 
