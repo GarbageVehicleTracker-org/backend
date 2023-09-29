@@ -1,17 +1,11 @@
 const mongoose = require("mongoose");
 
 // Define the user schema
-const userSchema = new mongoose.Schema({
+const positionSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
     unique: true,
-  },
-  //   image: {
-  //     type: String, // You can store the image URL as a string
-  //   },
-  phoneNumber: {
-    type: String,
   },
   coordinates: [
     {
@@ -22,6 +16,6 @@ const userSchema = new mongoose.Schema({
 });
 
 // Create the User model
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("position", positionSchema);
 
 module.exports = User;

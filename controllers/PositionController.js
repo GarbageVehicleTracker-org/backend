@@ -1,14 +1,13 @@
 // controllers/UserController.js
-const User = require("../schema/UserSchema");
+const User = require("../schema/PositionSchema");
 
-class UserController {
+class PositionController {
   async createUser(req, res) {
-    const { latitude, longitude, username, phoneNumber } = req.body;
+    const { latitude, longitude, username } = req.body;
 
     try {
       const newUser = new User({
         username,
-        phoneNumber,
         coordinates: [{ latitude, longitude }],
       });
 
@@ -34,4 +33,4 @@ class UserController {
   }
 }
 
-module.exports = new UserController();
+module.exports = new PositionController();
