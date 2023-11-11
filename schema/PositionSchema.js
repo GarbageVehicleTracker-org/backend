@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 const moment = require("moment-timezone");
 
@@ -15,9 +16,12 @@ const positionSchema = new mongoose.Schema({
 });
 
 positionSchema.virtual("coordinates.timestampIST").get(function () {
-  return moment(this.coordinates.timestamp).tz("Asia/Kolkata").format();
+  const utcTimestamp = this.coordinates.timestamp;
+  const istTimestamp = moment(utcTimestamp).tz("Asia/Kolkata").toDate();
+  return istTimestamp;
 });
 
 const Position = mongoose.model("Position", positionSchema);
 
 module.exports = Position;
+

@@ -37,21 +37,36 @@ class PositionController {
     }
   }
 
-async getCoordinates(req, res) {
+  async getCoordinates(req, res) {
     try {
-      // Find the single document and return its coordinates array
+      // Find the single document
       const position = await Position.findOne();
-      const coordinates = position ? position.coordinates : [];
+
+      if (!position) {
+        return res.status(200).json([]);
+      }
+
+      // Get the current timestamp in "Asia/Kolkata" timezone
+      const currentTimestamp = moment().tz("Asia/Kolkata").startOf("day");
+
+      // Filter the coordinates based on the same day timestamp
+      const matchingCoordinates = position.coordinates.filter((coordinate) => {
+        const coordinateTimestamp = moment(coordinate.timestamp)
+          .tz("Asia/Kolkata")
+          .startOf("day");
+        return coordinateTimestamp.isSame(currentTimestamp);
+      });
 
       // Convert the timestamps to "Asia/Kolkata" timezone format
-      const coordinatesInIST = coordinates.map((coordinate) => {
+      const coordinatesInIST = matchingCoordinates.map((coordinate) => {
         const timestampMoment = moment(coordinate.timestamp).tz("Asia/Kolkata");
-        const formattedTimestamp = timestampMoment.format("YYYY-MM-DD HH:mm:ss");
+        const formattedTimestamp = timestampMoment.format(
+          "YYYY-MM-DD HH:mm:ss"
+        );
         return {
           latitude: coordinate.latitude,
           longitude: coordinate.longitude,
           timestamp: formattedTimestamp,
-          // timestamp: timestampMoment,
         };
       });
 
@@ -62,6 +77,5 @@ async getCoordinates(req, res) {
     }
   }
 }
-
 
 module.exports = new PositionController();

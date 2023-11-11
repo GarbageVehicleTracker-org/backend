@@ -15,9 +15,9 @@ class AuthController {
       }
 
       // Compare the entered password with the hashed password
-      const passwordMatch = await bcrypt.compare(password, user.password);
+      // const passwordMatch = await bcrypt.compare(password, user.password);
 
-      if (passwordMatch) {
+      if (password === user.password) {
         // Passwords match, user is authenticated
         res.status(200).json({ message: "Login successful" });
       } else {
