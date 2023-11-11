@@ -4,6 +4,7 @@ const router = express.Router();
 const PositionController = require("./controllers/PositionController");
 const VehicleController = require("./controllers/VehicleController");
 const CurrentPositionController = require("./controllers/CurrentPositionController");
+const AuthController = require("./controllers/AuthController");
 
 // Define a route for the home page (not implemented yet)
 router.get("/", (req, res) => {
@@ -26,6 +27,8 @@ router.get("/get-vehicle", VehicleController.getVehicle);
 router.post("/update", CurrentPositionController.updatePosition);
 
 // Fetch the current position
-router.get("/get", CurrentPositionController.getPosition);
+router.get("/get/:userId?", CurrentPositionController.getPosition);
+
+router.post("/login", AuthController.login);
 
 module.exports = router;

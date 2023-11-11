@@ -3,19 +3,19 @@ const admin = require("../firebase");
 
 class CurrentPositionController {
   async updatePosition(req, res) {
-    const { latitude, longitude } = req.body;
+    const { userId, latitude, longitude } = req.body;
 
     // Check for undefined values
-    if (latitude === undefined || longitude === undefined) {
+    if (!userId || latitude === undefined || longitude === undefined) {
       return res
         .status(400)
-        .json({ error: "Latitude or longitude is missing." });
+        .json({ error: "userId, latitude, or longitude is missing." });
     }
 
     try {
       // Assuming you have a reference to your Firebase Realtime Database
       const db = admin.database();
-      const positionRef = db.ref("positions/user1/current_position");
+      const positionRef = db.ref(`positions/${userId}/current_position`);
 
       // Set the values in the database
       await positionRef.set({
@@ -31,34 +31,16 @@ class CurrentPositionController {
     }
   }
 
-  //   async getPosition(req, res) {
-  //     try {
-  //       // Get the latest position data from Firebase
-  //       const snapshot = await admin
-  //         .database()
-  //         .ref("positions/user1/current_position") // Correct path here
-  //         .once("value");
-  //       const currentPosition = snapshot.val();
-
-  //       // Check if position data exists
-  //       if (!currentPosition) {
-  //         return res.status(404).json({ error: "Position data not found." });
-  //       }
-
-  //       // Respond with the latest position data
-  //       res.status(200).json(currentPosition);
-  //     } catch (err) {
-  //       console.error(err);
-  //       res.status(500).json({ error: "Internal server error" });
-  //     }
-  //   }
+  //   getPosition Function
 
   async getPosition(req, res) {
     try {
-      // Get the latest position data from Firebase
+      const { userId } = req.params;
+      console.log(userId);
+      // Get the latest position data from Firebase based on userId
       const snapshot = await admin
         .database()
-        .ref("positions/user1/current_position")
+        .ref(`positions/${userId}/current_position`)
         .once("value");
 
       // Check if the snapshot exists and has a value
