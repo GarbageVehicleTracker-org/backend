@@ -72,7 +72,7 @@ const authenticateUser = (req, res, next) => {
 router.post("/send-coordinates", PositionController.createUser);
 
 // Route to respond to GET request with current coordinates
-router.get("/get-coordinates", PositionController.getCoordinates);
+router.get("/get-coordinates/:date?", PositionController.getCoordinates);
 
 // Route to handle sending vehicle data to MongoDB
 router.post("/send-vehicle", VehicleController.createVehicle);
