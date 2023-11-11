@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const PositionController = require("./controllers/PositionController");
 const VehicleController = require("./controllers/VehicleController");
+const CurrentPositionController = require("./controllers/CurrentPositionController");
 
 // Define a route for the home page (not implemented yet)
 router.get("/", (req, res) => {
@@ -20,5 +21,11 @@ router.post("/send-vehicle", VehicleController.createVehicle);
 
 // Route to retrieve vehicle coordinates (GET request)
 router.get("/get-vehicle", VehicleController.getVehicle);
+
+// Update the current position
+router.post("/update", CurrentPositionController.updatePosition);
+
+// Fetch the current position
+router.get("/get", CurrentPositionController.getPosition);
 
 module.exports = router;
