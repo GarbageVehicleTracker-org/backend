@@ -2,14 +2,17 @@
 const admin = require("../firebase");
 
 class CurrentPositionController {
-  async updatePosition(req, res) {
-    const { userId, latitude, longitude } = req.body;
 
+  async updatePosition(req, res) {
+    const { userId } = req.params; // Extract userId from URL parameters
+    const { latitude, longitude } = req.body;
+
+    console.log(userId);
     // Check for undefined values
-    if (!userId || latitude === undefined || longitude === undefined) {
+    if (latitude === undefined || longitude === undefined) {
       return res
         .status(400)
-        .json({ error: "userId, latitude, or longitude is missing." });
+        .json({ error: "latitude or longitude is missing." });
     }
 
     try {

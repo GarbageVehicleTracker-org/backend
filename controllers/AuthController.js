@@ -14,7 +14,6 @@ class AuthController {
         return res.status(401).json({ error: "Invalid credentials" });
       }
 
-      // Compare the entered password with the hashed password
       // const passwordMatch = await bcrypt.compare(password, user.password);
 
       if (password === user.password) {

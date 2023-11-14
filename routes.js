@@ -68,11 +68,26 @@ const authenticateUser = (req, res, next) => {
   next();
 };
 
+const validateDateParameter = (req, res, next) => {
+  const { date } = req.params;
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+  if (date && !date.match(dateRegex)) {
+    return res.error("Invalid date format. Use YYYY-MM-DD.");
+  }
+
+  next();
+};
+
 // Route to handle incoming coordinates and user details
 router.post("/send-coordinates", PositionController.createUser);
 
 // Route to respond to GET request with current coordinates
-router.get("/get-coordinates/:date?", PositionController.getCoordinates);
+router.get(
+  "/get-coordinates/:date?",
+  validateDateParameter,
+  PositionController.getCoordinates
+);
 
 // Route to handle sending vehicle data to MongoDB
 router.post("/send-vehicle", VehicleController.createVehicle);
@@ -81,7 +96,7 @@ router.post("/send-vehicle", VehicleController.createVehicle);
 router.get("/get-vehicle", VehicleController.getVehicle);
 
 // Update the current position
-router.post("/update", CurrentPositionController.updatePosition);
+router.post("/update/:userId?", CurrentPositionController.updatePosition);
 
 // Fetch the current position
 router.get("/get/:userId?", CurrentPositionController.getPosition);
