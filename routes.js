@@ -84,7 +84,7 @@ router.post("/send-coordinates", PositionController.createUser);
 
 // Route to respond to GET request with current coordinates
 router.get(
-  "/get-coordinates/:date?",
+  "/get-coordinates/:userId/:date?",
   validateDateParameter,
   PositionController.getCoordinates
 );

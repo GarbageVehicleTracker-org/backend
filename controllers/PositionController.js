@@ -38,6 +38,7 @@ class PositionController {
     }
   }
 
+
   // async getCoordinates(req, res) {
   //   try {
   //     // Find the single document
@@ -47,15 +48,21 @@ class PositionController {
   //       return res.status(200).json([]);
   //     }
 
-  //     // Get the current timestamp in "Asia/Kolkata" timezone
-  //     const currentTimestamp = moment().tz("Asia/Kolkata").startOf("day");
+  //     // Get the date parameter from the request, or use the current date if not provided
+  //     const requestedDate =
+  //       req.query.date || moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
 
-  //     // Filter the coordinates based on the same day timestamp
+  //     // Parse the requested date in "Asia/Kolkata" timezone
+  //     const requestedDateMoment = moment(requestedDate, "YYYY-MM-DD")
+  //       .tz("Asia/Kolkata")
+  //       .startOf("day");
+
+  //     // Filter the coordinates based on the requested date timestamp
   //     const matchingCoordinates = position.coordinates.filter((coordinate) => {
   //       const coordinateTimestamp = moment(coordinate.timestamp)
   //         .tz("Asia/Kolkata")
   //         .startOf("day");
-  //       return coordinateTimestamp.isSame(currentTimestamp);
+  //       return coordinateTimestamp.isSame(requestedDateMoment);
   //     });
 
   //     // Convert the timestamps to "Asia/Kolkata" timezone format
@@ -65,6 +72,7 @@ class PositionController {
   //         "YYYY-MM-DD HH:mm:ss"
   //       );
   //       return {
+  //         userId: coordinate.userId,
   //         latitude: coordinate.latitude,
   //         longitude: coordinate.longitude,
   //         timestamp: formattedTimestamp,
@@ -78,52 +86,57 @@ class PositionController {
   //   }
   // }
 
+
   async getCoordinates(req, res) {
     try {
-      // Find the single document
-      const position = await Position.findOne();
+        // Find the single document
+        const position = await Position.findOne();
 
-      if (!position) {
-        return res.status(200).json([]);
-      }
+        if (!position) {
+            return res.status(200).json([]);
+        }
 
-      // Get the date parameter from the request, or use the current date if not provided
-      const requestedDate =
-        req.query.date || moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
+        // Get the userId parameter from the request
+        const { userId } = req.params;
 
-      // Parse the requested date in "Asia/Kolkata" timezone
-      const requestedDateMoment = moment(requestedDate, "YYYY-MM-DD")
-        .tz("Asia/Kolkata")
-        .startOf("day");
+        // Get the date parameter from the request, or use the current date if not provided
+        const requestedDate =
+            req.query.date || moment().tz("Asia/Kolkata").format("YYYY-MM-DD");
 
-      // Filter the coordinates based on the requested date timestamp
-      const matchingCoordinates = position.coordinates.filter((coordinate) => {
-        const coordinateTimestamp = moment(coordinate.timestamp)
-          .tz("Asia/Kolkata")
-          .startOf("day");
-        return coordinateTimestamp.isSame(requestedDateMoment);
-      });
+        // Parse the requested date in "Asia/Kolkata" timezone
+        const requestedDateMoment = moment(requestedDate, "YYYY-MM-DD")
+            .tz("Asia/Kolkata")
+            .startOf("day");
 
-      // Convert the timestamps to "Asia/Kolkata" timezone format
-      const coordinatesInIST = matchingCoordinates.map((coordinate) => {
-        const timestampMoment = moment(coordinate.timestamp).tz("Asia/Kolkata");
-        const formattedTimestamp = timestampMoment.format(
-          "YYYY-MM-DD HH:mm:ss"
-        );
-        return {
-          userId: coordinate.userId,
-          latitude: coordinate.latitude,
-          longitude: coordinate.longitude,
-          timestamp: formattedTimestamp,
-        };
-      });
+        // Filter the coordinates based on the requested date timestamp and userId
+        const matchingCoordinates = position.coordinates.filter((coordinate) => {
+            const coordinateTimestamp = moment(coordinate.timestamp)
+                .tz("Asia/Kolkata")
+                .startOf("day");
+            return coordinateTimestamp.isSame(requestedDateMoment) && coordinate.userId === userId;
+        });
 
-      res.status(200).json(coordinatesInIST);
+        // Convert the timestamps to "Asia/Kolkata" timezone format
+        const coordinatesInIST = matchingCoordinates.map((coordinate) => {
+            const timestampMoment = moment(coordinate.timestamp).tz("Asia/Kolkata");
+            const formattedTimestamp = timestampMoment.format(
+                "YYYY-MM-DD HH:mm:ss"
+            );
+            return {
+                userId: coordinate.userId,
+                latitude: coordinate.latitude,
+                longitude: coordinate.longitude,
+                timestamp: formattedTimestamp,
+            };
+        });
+
+        res.status(200).json(coordinatesInIST);
     } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Internal server error" });
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
     }
-  }
+}
+
 }
 
 module.exports = new PositionController();
