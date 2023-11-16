@@ -1,10 +1,10 @@
-
 const mongoose = require("mongoose");
 const moment = require("moment-timezone");
 
 const positionSchema = new mongoose.Schema({
   coordinates: [
     {
+      userId: String,
       latitude: Number,
       longitude: Number,
       timestamp: {
@@ -24,4 +24,3 @@ positionSchema.virtual("coordinates.timestampIST").get(function () {
 const Position = mongoose.model("Position", positionSchema);
 
 module.exports = Position;
-

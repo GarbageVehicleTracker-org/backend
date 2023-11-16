@@ -4,7 +4,7 @@ const moment = require("moment-timezone"); // Import moment-timezone
 
 class PositionController {
   async createUser(req, res) {
-    const { latitude, longitude, timestamp } = req.body;
+    const { latitude, longitude,userId, timestamp } = req.body;
 
     try {
       // Find an existing document or create a new one
@@ -19,6 +19,7 @@ class PositionController {
 
       // Create a new coordinate object with the timestamp
       const newCoordinate = {
+        userId,
         latitude,
         longitude,
         timestamp: timestampMoment.toDate(), // Convert to JavaScript Date object
