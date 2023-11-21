@@ -1,24 +1,22 @@
+// vehicleSchema.js
 const mongoose = require("mongoose");
 
-// Define the vehicle schema
 const vehicleSchema = new mongoose.Schema({
-  name: {
+  id: {
     type: String,
     required: true,
+    unique: true,
   },
-  phoneNumbers: {
-    type: String,
+  capacity: {
+    type: Number,
     required: true,
   },
-  area: {
+  type: {
     type: String,
-  },
-  image: {
-    type: String, // You can store the image URL as a string
+    required: true,
   },
 });
 
-// Create the Vehicle model (collection name: workers)
-const Vehicle = mongoose.model("Worker", vehicleSchema);
+const Vehicle = mongoose.model("Vehicle", vehicleSchema);
 
 module.exports = Vehicle;

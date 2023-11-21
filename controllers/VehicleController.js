@@ -1,20 +1,26 @@
-// controllers/VehicleController.js
-const Vehicle = require("../schema/VehicleSchema");
+// vehicleController.js
+const Vehicle = require("../schema/VehicleSchema"); // Assuming your model is in a 'models' directory
 
 class VehicleController {
   async createVehicle(req, res) {
-    const { name, phoneNumbers, area, image } = req.body;
+    const { id, capacity, type } = req.body;
 
     try {
-      // Create a new Vehicle document with the provided details
+      // Check if a vehicle with the same ID already exists
+      const existingVehicle = await Vehicle.findOne({ id });
+
+      if (existingVehicle) {
+        return res.status(400).json({ error: "Vehicle with this ID already exists." });
+      }
+
+      // Create a new vehicle
       const newVehicle = new Vehicle({
-        name,
-        phoneNumbers,
-        area,
-        image,
+        id,
+        capacity,
+        type,
       });
 
-      // Save the new vehicle document to MongoDB
+      // Save the vehicle to the database
       const savedVehicle = await newVehicle.save();
 
       res.status(201).json(savedVehicle);
@@ -26,8 +32,8 @@ class VehicleController {
 
   async getVehicle(req, res) {
     try {
-      // Fetch data from the MongoDB collection named 'workers' in the 'test' database
-      const vehicles = await Vehicle.find({});
+      // Fetch all vehicles from the database
+      const vehicles = await Vehicle.find();
 
       res.status(200).json(vehicles);
     } catch (err) {
@@ -36,4 +42,5 @@ class VehicleController {
     }
   }
 }
+
 module.exports = new VehicleController();
