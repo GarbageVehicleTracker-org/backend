@@ -13,6 +13,9 @@ const driverSchema = new mongoose.Schema({
   age: {
     type: Number,
   },
+  gender:{
+    type:String,
+  },
   image: {
     type: String, // You can store the image URL as a string
   },
