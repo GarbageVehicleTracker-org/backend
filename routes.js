@@ -1,5 +1,5 @@
-
-
+const AreaController = require("./controllers/AreaController");
+const Area = require("./schema/AreaSchema");
 const express = require("express");
 const router = express.Router();
 const PositionController = require("./controllers/PositionController");
@@ -68,6 +68,41 @@ router.post("/send-vehicle", VehicleController.createVehicle);
 
 // Route to retrieve vehicle coordinates (GET request)
 router.get("/get-vehicle", VehicleController.getVehicle);
+
+// Route to create a new area
+router.post("/create-area", AreaController.createArea);
+
+// Route to add a new garbage point to a specific dustbin within an area
+router.post("/add-dustbin-point", AreaController.addDustbin);
+
+// Route to fetch information about a specific area
+router.get("/get-area/:areaName", async (req, res) => {
+  const areaName = req.params.areaName;
+
+  try {
+    // Find the area by name
+    const area = await Area.findOne({ name: areaName });
+
+    if (!area) {
+      return res.status(404).json({ error: "Area not found" });
+    }
+
+    // Extract relevant information to send in the response
+    const response = {
+      name: area.name,
+      dustbins: area.dustbins.map((dustbin) => {
+        return {
+          coordinates: dustbin.coordinates,
+        };
+      }),
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 // Update the current position
 router.post("/update/:userId?", CurrentPositionController.updatePosition);
