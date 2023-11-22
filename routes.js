@@ -76,7 +76,7 @@ router.post("/create-area", AreaController.createArea);
 router.post("/add-dustbin-point", AreaController.addDustbin);
 
 // Route to fetch information about a specific area
-router.get("/get-area/:areaName", async (req, res) => {
+router.get("/get-area/", async (req, res) => {
   const areaName = req.params.areaName;
 
   try {
@@ -103,6 +103,23 @@ router.get("/get-area/:areaName", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
+// Route to fetch a list of all areas
+router.get("/get-all-areas", async (req, res) => {
+  try {
+    // Find all areas in the database
+    const areas = await Area.find({}, "name");
+
+    // Extract only the names of the areas
+    const areaNames = areas.map((area) => area.name);
+
+    res.status(200).json(areaNames);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
 // Update the current position
 router.post("/update/:userId?", CurrentPositionController.updatePosition);
