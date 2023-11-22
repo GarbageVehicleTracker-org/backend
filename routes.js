@@ -7,6 +7,7 @@ const DriverController = require("./controllers/DriverController");
 const VehicleController = require("./controllers/VehicleController");
 const CurrentPositionController = require("./controllers/CurrentPositionController");
 const AuthController = require("./controllers/AuthController");
+const AssignedWorkController = require("./controllers/AssignedWorkController");
 
 // Define a route for the home page (not implemented yet)
 router.get("/", (req, res) => {
@@ -134,6 +135,8 @@ router.post("/update/:userId?", CurrentPositionController.updatePosition);
 
 // Fetch the current position
 router.get("/get/:userId?", CurrentPositionController.getPosition);
+
+router.post("/assign-work", AssignedWorkController.assignWork);
 
 // Authentication-protected route example
 router.post("/protected-route", authenticateUser, (req, res) => {
