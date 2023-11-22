@@ -3,11 +3,12 @@ const Driver = require("../schema/DriverSchema");
 
 class DriverController {
   async createDriver(req, res) {
-    const { name, phoneNumbers, age, gender, image } = req.body;
+    const { driverId, name, phoneNumbers, age, gender, image } = req.body;
 
     try {
       // Create a new Driver document with the provided details
       const newDriver = new Driver({
+        driverId,
         name,
         phoneNumbers,
         age,

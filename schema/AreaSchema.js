@@ -16,6 +16,11 @@ const dustbinSchema = new mongoose.Schema({
 });
 
 const areaSchema = new mongoose.Schema({
+  areaId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   name: {
     type: String,
     required: true,

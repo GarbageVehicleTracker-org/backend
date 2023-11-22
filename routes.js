@@ -75,53 +75,61 @@ router.post("/create-area", AreaController.createArea);
 // Route to add a new garbage point to a specific dustbin within an area
 router.post("/add-dustbin-point", AreaController.addDustbin);
 
-// Route to fetch information about a specific area
-router.get("/get-area/", async (req, res) => {
-  const areaName = req.params.areaName;
-
-  try {
-    // Find the area by name
-    const area = await Area.findOne({ name: areaName });
-
-    if (!area) {
-      return res.status(404).json({ error: "Area not found" });
-    }
-
-    // Extract relevant information to send in the response
-    const response = {
-      name: area.name,
-      dustbins: area.dustbins.map((dustbin) => {
-        return {
-          coordinates: dustbin.coordinates,
-        };
-      }),
-    };
-
-    res.status(200).json(response);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+router.get("/get-area/:areaName?", AreaController.getAreaByName);
 
 // Route to fetch a list of all areas
-router.get("/get-all-areas", async (req, res) => {
-  try {
-    // Find all areas in the database
-    const areas = await Area.find({}, "name");
+router.get("/get-all-areas", AreaController.getAllAreas);
 
-    // Extract only the names of the areas
-    const areaNames = areas.map((area) => area.name);
+router.get("/get-all-dustbins/:areaId?", AreaController.getAllDustbins);
 
-    res.status(200).json(areaNames);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+// Route to fetch information about a specific area
 
+// router.get("/get-area/", async (req, res) => {
+//   const areaName = req.params.areaName;
+
+//   try {
+//     // Find the area by name
+//     const area = await Area.findOne({ name: areaName });
+
+//     if (!area) {
+//       return res.status(404).json({ error: "Area not found" });
+//     }
+
+//     // Extract relevant information to send in the response
+//     const response = {
+//       name: area.name,
+//       dustbins: area.dustbins.map((dustbin) => {
+//         return {
+//           coordinates: dustbin.coordinates,
+//         };
+//       }),
+//     };
+
+//     res.status(200).json(response);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
+
+// // Route to fetch a list of all areas
+// router.get("/get-all-areas", async (req, res) => {
+//   try {
+//     // Find all areas in the database
+//     const areas = await Area.find({}, "name");
+
+//     // Extract only the names of the areas
+//     const areaNames = areas.map((area) => area.name);
+
+//     res.status(200).json(areaNames);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Internal server error" });
+//   }
+// });
 
 // Update the current position
+
 router.post("/update/:userId?", CurrentPositionController.updatePosition);
 
 // Fetch the current position

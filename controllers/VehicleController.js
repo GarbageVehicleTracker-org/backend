@@ -3,14 +3,16 @@ const Vehicle = require("../schema/VehicleSchema"); // Assuming your model is in
 
 class VehicleController {
   async createVehicle(req, res) {
-    const { id, capacity, type } = req.body;
+    const { id, capacity, type, registrationNo } = req.body;
 
     try {
       // Check if a vehicle with the same ID already exists
       const existingVehicle = await Vehicle.findOne({ id });
 
       if (existingVehicle) {
-        return res.status(400).json({ error: "Vehicle with this ID already exists." });
+        return res
+          .status(400)
+          .json({ error: "Vehicle with this ID already exists." });
       }
 
       // Create a new vehicle
@@ -18,6 +20,7 @@ class VehicleController {
         id,
         capacity,
         type,
+        registrationNo,
       });
 
       // Save the vehicle to the database

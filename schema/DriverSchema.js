@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 // Define the vehicle schema
 const driverSchema = new mongoose.Schema({
+  driverId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   name: {
     type: String,
     required: true,
@@ -13,8 +18,8 @@ const driverSchema = new mongoose.Schema({
   age: {
     type: Number,
   },
-  gender:{
-    type:String,
+  gender: {
+    type: String,
   },
   image: {
     type: String, // You can store the image URL as a string
