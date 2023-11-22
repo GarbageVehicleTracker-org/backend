@@ -89,20 +89,40 @@ class AreaController {
     }
   }
 
+  // async getAllAreas(req, res) {
+  //   try {
+  //     // Find all areas in the database
+  //     const areas = await Area.find({}, "name");
+
+  //     // Extract only the names of the areas
+  //     const areaNames = areas.map((area) => area.name);
+
+  //     res.status(200).json(areaNames);
+  //   } catch (error) {
+  //     console.error(error);
+  //     res.status(500).json({ error: "Internal server error" });
+  //   }
+  // }
   async getAllAreas(req, res) {
     try {
-      // Find all areas in the database
-      const areas = await Area.find({}, "name");
+        // Find all areas in the database
+        const areas = await Area.find({}, "name areaId");
 
-      // Extract only the names of the areas
-      const areaNames = areas.map((area) => area.name);
+        // Extract relevant information to send in the response
+        const areaDetails = areas.map((area) => {
+            return {
+                areaId: area.areaId,
+                name: area.name,
+            };
+        });
 
-      res.status(200).json(areaNames);
+        res.status(200).json(areaDetails);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal server error" });
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
     }
-  }
+}
+
 }
 
 module.exports = new AreaController();
