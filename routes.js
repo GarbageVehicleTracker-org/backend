@@ -61,14 +61,14 @@ router.get(
 // Route to handle sending vehicle data to MongoDB
 router.post("/send-driver", DriverController.createDriver);
 
-// Route to retrieve vehicle coordinates (GET request)
-router.get("/get-driver", DriverController.getDriver);
+// Route to fetch individual or all drivers
+router.get("/get-driver/:driverId?", DriverController.getDriver);
 
 // Route to handle sending vehicle data to MongoDB
 router.post("/send-vehicle", VehicleController.createVehicle);
 
-// Route to retrieve vehicle coordinates (GET request)
-router.get("/get-vehicle", VehicleController.getVehicle);
+// Route to fetch individual or all vehicles
+router.get("/get-vehicle/:id?", VehicleController.getVehicle);
 
 // Route to create a new area
 router.post("/create-area", AreaController.createArea);

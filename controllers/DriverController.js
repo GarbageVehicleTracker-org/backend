@@ -27,15 +27,27 @@ class DriverController {
   }
 
   async getDriver(req, res) {
+    const { driverId } = req.params;
+    console.log(driverId)
     try {
-      // Fetch data from the MongoDB collection named 'workers' in the 'test' database
-      const vehicles = await Driver.find({});
+        // If driverId is provided, fetch individual driver
+        if (driverId) {
+            const driver = await Driver.findOne({ driverId });
+            if (!driver) {
+                return res.status(404).json({ error: "Driver not found" });
+            }
+            return res.status(200).json(driver);
+        }
 
-      res.status(200).json(vehicles);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ error: "Internal server error" });
+        // If no driverId is provided, fetch all drivers
+        const allDrivers = await Driver.find();
+        res.status(200).json(allDrivers);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
     }
-  }
+}
+
+
 }
 module.exports = new DriverController();

@@ -1,5 +1,5 @@
 // vehicleController.js
-const Vehicle = require("../schema/VehicleSchema"); // Assuming your model is in a 'models' directory
+const Vehicle = require("../schema/VehicleSchema");
 
 class VehicleController {
   async createVehicle(req, res) {
@@ -34,13 +34,23 @@ class VehicleController {
   }
 
   async getVehicle(req, res) {
+    const { id } = req.params;
+    console.log(id)
     try {
-      // Fetch all vehicles from the database
-      const vehicles = await Vehicle.find();
+      // If id is provided, fetch individual vehicle
+      if (id) {
+        const vehicle = await Vehicle.findOne({ id });
+        if (!vehicle) {
+          return res.status(404).json({ error: "Vehicle not found" });
+        }
+        return res.status(200).json(vehicle);
+      }
 
-      res.status(200).json(vehicles);
-    } catch (err) {
-      console.error(err);
+      // If no id is provided, fetch all vehicles
+      const allVehicles = await Vehicle.find();
+      res.status(200).json(allVehicles);
+    } catch (error) {
+      console.error(error);
       res.status(500).json({ error: "Internal server error" });
     }
   }

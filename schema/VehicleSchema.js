@@ -19,12 +19,6 @@ const vehicleSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // color: {
-  //   type: String,
-  // },
-  // image: {
-  //   type: String,
-  // },
 });
 
 const Vehicle = mongoose.model("Vehicle", vehicleSchema);
