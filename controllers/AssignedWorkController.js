@@ -21,7 +21,15 @@ class AssignedWorkController {
         }
     }
 
-    // Add other methods as needed
+    async getAllAssignedWork(req, res) {
+        try {
+            const allAssignedWork = await AssignedWork.find();
+            res.status(200).json(allAssignedWork);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Internal server error" });
+        }
+    }
 }
 
 module.exports = new AssignedWorkController();

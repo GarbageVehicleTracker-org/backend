@@ -85,51 +85,7 @@ router.get("/get-all-dustbins/:areaId?", AreaController.getAllDustbins);
 
 router.get("/get-dustbin-count/:areaId?", AreaController.getDustbinCount);
 
-// Route to fetch information about a specific area
-
-// router.get("/get-area/", async (req, res) => {
-//   const areaName = req.params.areaName;
-
-//   try {
-//     // Find the area by name
-//     const area = await Area.findOne({ name: areaName });
-
-//     if (!area) {
-//       return res.status(404).json({ error: "Area not found" });
-//     }
-
-//     // Extract relevant information to send in the response
-//     const response = {
-//       name: area.name,
-//       dustbins: area.dustbins.map((dustbin) => {
-//         return {
-//           coordinates: dustbin.coordinates,
-//         };
-//       }),
-//     };
-
-//     res.status(200).json(response);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// });
-
-// // Route to fetch a list of all areas
-// router.get("/get-all-areas", async (req, res) => {
-//   try {
-//     // Find all areas in the database
-//     const areas = await Area.find({}, "name");
-
-//     // Extract only the names of the areas
-//     const areaNames = areas.map((area) => area.name);
-
-//     res.status(200).json(areaNames);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Internal server error" });
-//   }
-// });
+router.get("/get-all-assigned-work", AssignedWorkController.getAllAssignedWork);
 
 // Update the current position
 
