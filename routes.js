@@ -83,6 +83,8 @@ router.get("/get-all-areas", AreaController.getAllAreas);
 
 router.get("/get-all-dustbins/:areaId?", AreaController.getAllDustbins);
 
+router.get("/get-dustbin-count/:areaId?", AreaController.getDustbinCount);
+
 // Route to fetch information about a specific area
 
 // router.get("/get-area/", async (req, res) => {

@@ -63,6 +63,29 @@ class AreaController {
     }
   }
 
+  async getDustbinCount(req, res) {
+    const { areaId } = req.params;
+
+    try {
+      // Use findOne with the field you want to search (areaId)
+      const area = await Area.findOne({ areaId });
+
+      if (!area) {
+        return res.status(404).json({ error: "Area not found" });
+      }
+
+      // Get the count of objects inside the dustbin
+      const dustbinCount = area.dustbins.length;
+
+      res.status(200).json({ dustbinCount });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+  }
+
+
+
   async getAreaByName(req, res) {
     const areaName = req.params.areaName;
 
