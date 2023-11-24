@@ -1,5 +1,8 @@
 // assignedWorkSchema.js
 const mongoose = require("mongoose");
+const Area = require("./AreaSchema"); // Import the Area schema
+const Driver = require("./DriverSchema"); // Import the Driver schema
+const Vehicle = require("./VehicleSchema");
 
 const assignedWorkSchema = new mongoose.Schema({
     areaId: {
@@ -7,19 +10,18 @@ const assignedWorkSchema = new mongoose.Schema({
         required: true,
         validate: {
             validator: async function (value) {
-                const area = await Area.findOne(value);
-                return area !== null;
+                return await Area.findOne({ areaId: value }) !== null;
             },
             message: "Area not found",
         },
     },
+    
     driverId: {
         type: String,
         required: true,
         validate: {
             validator: async function (value) {
-                const driver = await Driver.findOne(value);
-                return driver !== null;
+                return await Driver.findOne({ driverId: value }) !== null;
             },
             message: "Driver not found",
         },
@@ -29,8 +31,7 @@ const assignedWorkSchema = new mongoose.Schema({
         required: true,
         validate: {
             validator: async function (value) {
-                const vehicle = await Vehicle.findOne(value);
-                return vehicle !== null;
+                return await Vehicle.findOne({ id: value }) !== null;
             },
             message: "Vehicle not found",
         },
