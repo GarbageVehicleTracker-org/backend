@@ -7,6 +7,7 @@ const CurrentPositionController = require("./controllers/CurrentPositionControll
 const AuthController = require("./controllers/AuthController");
 const AssignedWorkController = require("./controllers/AssignedWorkController");
 const AreaController = require("./controllers/AreaController");
+const coordinatesMatchController = require('./controllers/CoordinatesMatchController');
 
 // Welcome message for the home page
 router.get("/", (req, res) => {
@@ -107,5 +108,7 @@ router.post("/protected-route", authenticateUser, (req, res) => {
 
 // User login route
 router.post("/login", AuthController.login);
+
+router.post('/check-coordinates-match', coordinatesMatchController.checkCoordinatesMatchController);
 
 module.exports = router;
