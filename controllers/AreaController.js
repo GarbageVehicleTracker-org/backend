@@ -17,17 +17,18 @@ class AreaController {
 
   async addDustbin(req, res) {
     const { areaId, coordinates } = req.body;
-
+  
     try {
-      const area = await Area.findById(areaId);
-
+      // Use findOne with the field you want to search (areaId)
+      const area = await Area.findOne({ areaId });
+  
       if (!area) {
         return res.status(404).json({ error: "Area not found" });
       }
-
+  
       // Dynamically add a new dustbin to the dustbins array
       area.dustbins.push({ coordinates });
-
+  
       const savedArea = await area.save();
       res.status(200).json(savedArea);
     } catch (error) {
@@ -35,13 +36,14 @@ class AreaController {
       res.status(500).json({ error: "Internal server error" });
     }
   }
+  
 
   async getAllDustbins(req, res) {
     const areaId = req.params.areaId;
 
     try {
       // Find the area by areaId
-      const area = await Area.findOne(areaId);
+      const area = await Area.findOne({areaId});
 
       if (!area) {
         return res.status(404).json({ error: "Area not found" });
