@@ -1,5 +1,3 @@
-const AreaController = require("./controllers/AreaController");
-const Area = require("./schema/AreaSchema");
 const express = require("express");
 const router = express.Router();
 const PositionController = require("./controllers/PositionController");
@@ -8,8 +6,9 @@ const VehicleController = require("./controllers/VehicleController");
 const CurrentPositionController = require("./controllers/CurrentPositionController");
 const AuthController = require("./controllers/AuthController");
 const AssignedWorkController = require("./controllers/AssignedWorkController");
+const AreaController = require("./controllers/AreaController");
 
-// Define a route for the home page (not implemented yet)
+// Welcome message for the home page
 router.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the Home Page!" });
 });
@@ -20,7 +19,7 @@ router.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal Server Error" });
 });
 
-// Consistent JSON responses
+// Consistent JSON responses middleware
 router.use((req, res, next) => {
   res.success = (data) => res.status(200).json({ success: true, data });
   res.error = (message) =>
@@ -37,6 +36,7 @@ const authenticateUser = (req, res, next) => {
   next();
 };
 
+// Validation middleware for date parameter
 const validateDateParameter = (req, res, next) => {
   const { date } = req.params;
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
@@ -58,7 +58,7 @@ router.get(
   PositionController.getCoordinates
 );
 
-// Route to handle sending vehicle data to MongoDB
+// Route to handle sending driver data to MongoDB
 router.post("/send-driver", DriverController.createDriver);
 
 // Route to fetch individual or all drivers
@@ -76,24 +76,28 @@ router.post("/create-area", AreaController.createArea);
 // Route to add a new garbage point to a specific dustbin within an area
 router.post("/add-dustbin-point", AreaController.addDustbin);
 
+// Route to fetch information about a specific area by name
 router.get("/get-area/:areaName?", AreaController.getAreaByName);
 
 // Route to fetch a list of all areas
 router.get("/get-all-areas", AreaController.getAllAreas);
 
+// Route to fetch all dustbins in a specific area
 router.get("/get-all-dustbins/:areaId?", AreaController.getAllDustbins);
 
+// Route to fetch the count of dustbins in a specific area
 router.get("/get-dustbin-count/:areaId?", AreaController.getDustbinCount);
 
+// Route to fetch all assigned work
 router.get("/get-all-assigned-work", AssignedWorkController.getAllAssignedWork);
 
 // Update the current position
-
 router.post("/update/:userId?", CurrentPositionController.updatePosition);
 
 // Fetch the current position
 router.get("/get/:userId?", CurrentPositionController.getPosition);
 
+// Route to assign work
 router.post("/assign-work", AssignedWorkController.assignWork);
 
 // Authentication-protected route example
@@ -101,6 +105,7 @@ router.post("/protected-route", authenticateUser, (req, res) => {
   res.success("This route is protected");
 });
 
+// User login route
 router.post("/login", AuthController.login);
 
 module.exports = router;
