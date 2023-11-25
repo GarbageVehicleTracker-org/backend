@@ -1,5 +1,5 @@
-// CoordinatesMatchController.js
 const fetch = require('node-fetch');
+const Area = require('../schema/AreaSchema'); // Import the Mongoose model
 
 // Function to fetch data from the API
 async function fetchData(apiUrl) {
@@ -32,7 +32,44 @@ async function checkCoordinatesMatchController(req, res) {
             areaCoord.longitude === vehicleCoordinates.longitude
         ));
 
+        console.log('Coordinates:', areaCoordinates, vehicleCoordinates);
+        console.log('Coordinates Match:', coordinatesMatch);
+
         if (coordinatesMatch) {
+            // Update isVisited and visitedTimestamp in the database
+            await Area.updateOne(
+                {
+                    areaId,
+                    'dustbins.coordinates.latitude': vehicleCoordinates.latitude,
+                    'dustbins.coordinates.longitude': vehicleCoordinates.longitude,
+                },
+                {
+                    $set: {
+                        'dustbins.$.isVisited': true,
+                        'dustbins.$.visitedTimestamp': new Date(),
+                    },
+                }
+            );
+
+            // Schedule the automation task after 1 minute
+            setTimeout(async () => {
+                // Reset isVisited to false and visitedTimestamp to null
+                await Area.updateOne(
+                    {
+                        areaId,
+                        'dustbins.coordinates.latitude': vehicleCoordinates.latitude,
+                        'dustbins.coordinates.longitude': vehicleCoordinates.longitude,
+                    },
+                    {
+                        $set: {
+                            'dustbins.$.isVisited': false,
+                            'dustbins.$.visitedTimestamp': null,
+                        },
+                    }
+                );
+                console.log('Automation task completed.');
+            }, 72000000); // 1 minute in milliseconds
+
             // Send a message if coordinates match
             res.status(200).json({ success: true, message: 'Coordinates matched!' });
         } else {
@@ -47,4 +84,3 @@ async function checkCoordinatesMatchController(req, res) {
 module.exports = {
     checkCoordinatesMatchController,
 };
-
