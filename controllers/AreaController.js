@@ -131,23 +131,25 @@ class AreaController {
   // }
   async getAllAreas(req, res) {
     try {
-      // Find all areas in the database
-      const areas = await Area.find({}, "name areaId");
+        // Find all areas in the database
+        const areas = await Area.find();
 
-      // Extract relevant information to send in the response
-      const areaDetails = areas.map((area) => {
-        return {
-          areaId: area.areaId,
-          name: area.name,
-        };
-      });
+        // Extract relevant information to send in the response
+        const areaDetails = areas.map((area) => {
+            return {
+                areaId: area.areaId,
+                name: area.name,
+                dustbins: area.dustbins, // Add this line to include dustbins field
+            };
+        });
 
-      res.status(200).json(areaDetails);
+        res.status(200).json(areaDetails);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal server error" });
+        console.error(error);
+        res.status(500).json({ error: "Internal server error" });
     }
-  }
+}
+
 }
 
 module.exports = new AreaController();
