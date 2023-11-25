@@ -1,4 +1,5 @@
 // controllers/AreaController.js
+
 const Area = require("../schema/AreaSchema");
 
 class AreaController {
@@ -115,41 +116,53 @@ class AreaController {
     }
   }
 
-  // async getAllAreas(req, res) {
-  //   try {
-  //     // Find all areas in the database
-  //     const areas = await Area.find({}, "name");
-
-  //     // Extract only the names of the areas
-  //     const areaNames = areas.map((area) => area.name);
-
-  //     res.status(200).json(areaNames);
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).json({ error: "Internal server error" });
-  //   }
-  // }
   async getAllAreas(req, res) {
     try {
-        // Find all areas in the database
-        const areas = await Area.find();
+      // Find all areas in the database
+      const areas = await Area.find();
 
-        // Extract relevant information to send in the response
-        const areaDetails = areas.map((area) => {
-            return {
-                areaId: area.areaId,
-                name: area.name,
-                dustbins: area.dustbins, // Add this line to include dustbins field
-            };
-        });
+      // Extract relevant information to send in the response
+      const areaDetails = areas.map((area) => {
+        return {
+          areaId: area.areaId,
+          name: area.name,
+          dustbins: area.dustbins,
+        };
+      });
 
-        res.status(200).json(areaDetails);
+      res.status(200).json(areaDetails);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Internal server error" });
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
     }
-}
+  }
 
+  // Add a new method to reset dustbin status
+  async resetDustbinsStatus(req, res) {
+    try {
+      // Reset isVisited to false and visitedTimestamp to null for all dustbins
+      await Area.updateMany({}, { $set: { "dustbins.$[].isVisited": false, "dustbins.$[].visitedTimestamp": null } });
+
+      res.status(200).json({ success: true, message: "Dustbin status reset successfully." });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, error: "Internal server error" });
+    }
+  }
+
+  // Add a new method to start the automation task
+  startAutomationTask() {
+    // Schedule the automation task after 1 minute
+    setTimeout(async () => {
+      try {
+        // Reset isVisited to false and visitedTimestamp to null for all dustbins
+        await Area.updateMany({}, { $set: { "dustbins.$[].isVisited": false, "dustbins.$[].visitedTimestamp": null } });
+        console.log("Automation task completed.");
+      } catch (error) {
+        console.error("Error in automation task:", error);
+      }
+    }, 72000000); // 1 minute in milliseconds
+  }
 }
 
 module.exports = new AreaController();
