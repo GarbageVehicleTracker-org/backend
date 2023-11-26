@@ -7,7 +7,7 @@ const CurrentPositionController = require("./controllers/CurrentPositionControll
 const AuthController = require("./controllers/AuthController");
 const AssignedWorkController = require("./controllers/AssignedWorkController");
 const AreaController = require("./controllers/AreaController");
-const coordinatesMatchController = require('./controllers/CoordinatesMatchController');
+const coordinatesMatchController = require("./controllers/CoordinatesMatchController");
 
 // Welcome message for the home page
 router.get("/", (req, res) => {
@@ -93,10 +93,10 @@ router.get("/get-dustbin-count/:areaId?", AreaController.getDustbinCount);
 router.get("/get-all-assigned-work", AssignedWorkController.getAllAssignedWork);
 
 // Update the current position
-router.post("/update/:userId?", CurrentPositionController.updatePosition);
+router.post("/update/:vehicleId?", CurrentPositionController.updatePosition);
 
 // Fetch the current position
-router.get("/get/:userId?", CurrentPositionController.getPosition);
+router.get("/get/:vehicleId?", CurrentPositionController.getPosition);
 
 // Route to assign work
 router.post("/assign-work", AssignedWorkController.assignWork);
@@ -109,7 +109,13 @@ router.post("/protected-route", authenticateUser, (req, res) => {
 // User login route
 router.post("/login", AuthController.login);
 
-router.post('/check-coordinates-match', coordinatesMatchController.checkCoordinatesMatchController);
-router.post('/send-real-coordinates/:vehicleId?', coordinatesMatchController.receiveCoordinatesMatchController);
+router.post(
+  "/check-coordinates-match",
+  coordinatesMatchController.checkCoordinatesMatchController
+);
+router.post(
+  "/send-real-coordinates/:vehicleId?",
+  coordinatesMatchController.receiveCoordinatesMatchController
+);
 
 module.exports = router;

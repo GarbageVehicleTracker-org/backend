@@ -7,6 +7,7 @@ const Vehicle = require("./VehicleSchema");
 const assignedWorkSchema = new mongoose.Schema({
     areaId: {
         type: String,
+        unique: true,
         required: true,
         validate: {
             validator: async function (value) {

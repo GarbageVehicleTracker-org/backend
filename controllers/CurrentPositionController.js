@@ -2,12 +2,11 @@
 const admin = require("../firebase");
 
 class CurrentPositionController {
-
   async updatePosition(req, res) {
-    const { userId } = req.params; // Extract userId from URL parameters
+    const { vehicleId } = req.params; // Extract userId from URL parameters
     const { latitude, longitude } = req.body;
 
-    console.log(userId);
+    console.log(vehicleId);
     // Check for undefined values
     if (latitude === undefined || longitude === undefined) {
       return res
@@ -18,7 +17,7 @@ class CurrentPositionController {
     try {
       // Assuming you have a reference to your Firebase Realtime Database
       const db = admin.database();
-      const positionRef = db.ref(`positions/${userId}/current_position`);
+      const positionRef = db.ref(`positions/${vehicleId}/current_position`);
 
       // Set the values in the database
       await positionRef.set({
@@ -38,12 +37,12 @@ class CurrentPositionController {
 
   async getPosition(req, res) {
     try {
-      const { userId } = req.params;
-      console.log(userId);
+      const { vehicleId } = req.params;
+      console.log(vehicleId);
       // Get the latest position data from Firebase based on userId
       const snapshot = await admin
         .database()
-        .ref(`positions/${userId}/current_position`)
+        .ref(`positions/${vehicleId}/current_position`)
         .once("value");
 
       // Check if the snapshot exists and has a value
