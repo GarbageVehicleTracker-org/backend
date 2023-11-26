@@ -2,10 +2,10 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "backend code for our college project",
-  "main": "app.js",
+  "main": "index.js",
   "proxy": "https://garbage-collect.onrender.com",
   "scripts": {
-    "test": "nodemon app.js"
+    "test": "nodemon index.js"
   },
   "author": "Linux Team",
   "license": "ISC",
