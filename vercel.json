@@ -1,16 +1,14 @@
 {
     "version": 2,
-    "builds": [
-      {
-        "src": "./index.js",  
-        "use": "@now/node"  
-      }
-    ],
+    "root": ".",
+    "entrypoints": ["index.js"],
     "routes": [
       {
-        "src": "/(.*)",
-        "dest": "/index.js"  
+        "src": "**/*.js",
+        "dest": "/"
       }
-    ]
+    ],
+    "env": {
+      "NODE_ENV": "production"
+    }
   }
-  
