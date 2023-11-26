@@ -110,5 +110,6 @@ router.post("/protected-route", authenticateUser, (req, res) => {
 router.post("/login", AuthController.login);
 
 router.post('/check-coordinates-match', coordinatesMatchController.checkCoordinatesMatchController);
+router.post('/send-real-coordinates/:vehicleId?', coordinatesMatchController.receiveCoordinatesMatchController);
 
 module.exports = router;
