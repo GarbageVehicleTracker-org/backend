@@ -3,10 +3,11 @@ const admin = require("../firebase");
 
 class CurrentPositionController {
   async updatePosition(req, res) {
-    const { vehicleId } = req.params; // Extract userId from URL parameters
+    const { vehicleId } = req.params;
     const { latitude, longitude } = req.body;
 
     console.log(vehicleId);
+
     // Check for undefined values
     if (latitude === undefined || longitude === undefined) {
       return res
@@ -26,6 +27,16 @@ class CurrentPositionController {
         timestamp: new Date().toISOString(),
       });
 
+      // Emit a message to all connected clients when the position is updated
+      const message = {
+        type: "positionUpdate",
+        data: { vehicleId, latitude, longitude },
+      };
+
+      connectedClients.forEach((client) => {
+        client.send(JSON.stringify(message));
+      });
+
       res.status(200).json({ success: true });
     } catch (error) {
       console.error("Error updating position:", error);
@@ -33,12 +44,10 @@ class CurrentPositionController {
     }
   }
 
-  //   getPosition Function
-
   async getPosition(req, res) {
     try {
       const { vehicleId } = req.params;
-      console.log(vehicleId);
+
       // Get the latest position data from Firebase based on userId
       const snapshot = await admin
         .database()

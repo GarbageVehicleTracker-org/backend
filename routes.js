@@ -1,4 +1,5 @@
 const express = require("express");
+const expressWs = require("express-ws");
 const router = express.Router();
 const PositionController = require("./controllers/PositionController");
 const DriverController = require("./controllers/DriverController");
@@ -9,9 +10,23 @@ const AssignedWorkController = require("./controllers/AssignedWorkController");
 const AreaController = require("./controllers/AreaController");
 const coordinatesMatchController = require("./controllers/CoordinatesMatchController");
 
+// Create an expressWs instance and attach it to the app
+const app = express();
+expressWs(app);
+
+const connectedClients = new Set();
+
 // Welcome message for the home page
 router.get("/", (req, res) => {
   res.status(200).json({ message: "Welcome to the Home Page!" });
+});
+
+// WebSocket route to handle WebSocket connection
+router.ws("/ws", (ws, req) => {
+  // Handle WebSocket connection
+
+  // For example, send a welcome message to the connected WebSocket client
+  ws.send("Welcome to the WebSocket server!");
 });
 
 // Error handling middleware
@@ -117,5 +132,19 @@ router.post(
   "/send-real-coordinates/:vehicleId?",
   coordinatesMatchController.receiveCoordinatesMatchController
 );
+
+// WebSocket route to handle WebSocket connection
+router.ws("/ws", (ws, req) => {
+  // Add the new WebSocket connection to the set
+  connectedClients.add(ws);
+
+  // Handle the WebSocket connection close event
+  ws.on("close", () => {
+    connectedClients.delete(ws);
+  });
+
+  // Send a welcome message to the connected WebSocket client
+  ws.send("Welcome to the WebSocket server!");
+});
 
 module.exports = router;
