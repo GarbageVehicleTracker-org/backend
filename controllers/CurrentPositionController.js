@@ -1,6 +1,9 @@
 // controllers/CurrentPositionController.js
 const admin = require("../firebase");
 
+// Assuming connectedClients is defined globally or imported from another module
+let connectedClients = []; // Make sure it's initialized appropriately
+
 class CurrentPositionController {
   async updatePosition(req, res) {
     const { vehicleId } = req.params;
@@ -33,6 +36,7 @@ class CurrentPositionController {
         data: { vehicleId, latitude, longitude },
       };
 
+      // Iterate over connectedClients and send the message to each client
       connectedClients.forEach((client) => {
         client.send(JSON.stringify(message));
       });
