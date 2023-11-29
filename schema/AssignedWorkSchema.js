@@ -40,7 +40,7 @@ const assignedWorkSchema = new mongoose.Schema({
     assignedAt: {
         type: Date,
         default: Date.now,
-    },
+    }, 
 });
 
 const AssignedWork = mongoose.model("AssignedWork", assignedWorkSchema);

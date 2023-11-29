@@ -71,7 +71,6 @@ async function checkCoordinatesMatchController(req, res) {
 
 // Define receiveCoordinatesMatchController separately
 
-
 async function receiveCoordinatesMatchController(req, res) {
   const { vehicleId } = req.params;
   let { latitude, longitude } = req.body;
@@ -125,7 +124,10 @@ async function receiveCoordinatesMatchController(req, res) {
       );
 
       if (coordinatesMatch) {
+        console.log("coordinates matched");
         matchingDustbins.push(dustbin);
+      } else {
+        console.log("coordinates not matched");
       }
     }
 
@@ -160,14 +162,11 @@ async function receiveCoordinatesMatchController(req, res) {
     }
   } catch (error) {
     console.error("Error checking coordinates match:", error);
-    return res.status(500).json({ success: false, error: "Internal server error" });
+    return res
+      .status(500)
+      .json({ success: false, error: "Internal server error" });
   }
 }
-
-
-
-
-
 
 module.exports = {
   checkCoordinatesMatchController,

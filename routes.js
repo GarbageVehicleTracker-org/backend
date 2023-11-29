@@ -92,7 +92,7 @@ router.post("/create-area", AreaController.createArea);
 // Route to add a new garbage point to a specific dustbin within an area
 router.post("/add-dustbin-point", AreaController.addDustbin);
 
-// Route to fetch information about a specific area by name
+// Route to fetch information about a specific area by name 
 router.get("/get-area/:areaName?", AreaController.getAreaByName);
 
 // Route to fetch a list of all areas
