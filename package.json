@@ -4,6 +4,7 @@
   "description": "backend code for our college project",
   "main": "index.js",
   "proxy": "https://garbage-collect.onrender.com",
+  "proxy": "https://api.cloudinary.com",
   "scripts": {
     "test": "node index.js"
   },

@@ -137,7 +137,10 @@ class AreaController {
     }
   }
 
-
+  async getAllDustbinsCoordinates(req, res) {
+    const areaId = req.params.areaId;
+    
+  }
 }
 
 module.exports = new AreaController();
