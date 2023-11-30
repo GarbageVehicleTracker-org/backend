@@ -2,11 +2,11 @@
 const express = require("express");
 const cors = require("cors");
 const http = require("http");
-const cron = require('node-cron');
+const cron = require("node-cron");
 const WebSocket = require("ws");
 const routes = require("./routes");
-const AutomationController = require("./controllers/AutomationController")
-const bodyParser = require('body-parser');
+const AutomationController = require("./controllers/AutomationController");
+const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const { mongoUri } = require("./config");
 const app = express();
@@ -39,8 +39,6 @@ wss.on("connection", (ws) => {
   });
 });
 
-
-
 const automationController = new AutomationController();
 
 // Start the automation task after 1 minute
@@ -48,8 +46,6 @@ automationController.startAutomationTask();
 
 // Start the nightly automation task
 automationController.startNightlyAutomationTask();
-
-
 
 // Connect to MongoDB using the mongoUri
 mongoose
@@ -60,7 +56,11 @@ mongoose
   .catch((error) => console.error("Error connecting to MongoDB:", error));
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(express.json());
 app.use(bodyParser.json());
 app.use("/", routes);
