@@ -139,6 +139,32 @@ class AreaController {
 
   async getAllDustbinsCoordinates(req, res) {
     const areaId = req.params.areaId;
+
+    try {
+      // Find the area by areaId
+      const area = await Area.findOne({ areaId });
+    
+      if (!area) {
+        return res.status(404).json({ error: "Area not found" });
+      }
+    
+      // Extract middle coordinates from the area's dustbins
+      const dustbins = area.dustbins.map((dustbin) => {
+        const { coordinates } = dustbin;
+        const middleIndex = Math.floor(coordinates.length / 2);
+        const middleCoordinates = coordinates[middleIndex];
+    
+        return {
+          middleCoordinates,
+        };
+      });
+    
+      res.status(200).json(dustbins);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal server error" });
+    }
+    
     
   }
 }
