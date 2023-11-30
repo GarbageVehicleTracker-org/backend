@@ -219,10 +219,10 @@ async function receiveCoordinatesMatchController(req, res) {
       // Check each coordinate in the dustbin
       const coordinatesMatch = dustbin.coordinates.some(
         (coord) =>
-          parseFloat(coord.latitude.toFixed(5)) ===
-            parseFloat(latitude.toFixed(5)) &&
-          parseFloat(coord.longitude.toFixed(5)) ===
-            parseFloat(longitude.toFixed(5))
+          parseFloat(coord.latitude.toFixed(4)) ===
+            parseFloat(latitude.toFixed(4)) &&
+          parseFloat(coord.longitude.toFixed(4)) ===
+            parseFloat(longitude.toFixed(4))
       );
 
       if (coordinatesMatch) {
